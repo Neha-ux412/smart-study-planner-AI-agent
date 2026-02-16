@@ -1,14 +1,18 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
 
+// ✅ Serve frontend static files
+app.use(express.static(path.join(__dirname)));
+
 app.get("/", (req, res) => {
-    res.send("Smart Study Planner AI Agent is Running 🤖");
+    res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.post("/generate-plan", (req, res) => {
@@ -99,18 +103,14 @@ app.post("/generate-plan", (req, res) => {
         hours: hoursPerDay
     });
 
-    // 🤖 Agent Reasoning
+    // 🤖 Agent Reasoning (Line Break Friendly)
     const hardCount = parsedSubjects.filter(s => s.difficulty === "hard").length;
     const limitedSchedule = totalDays <= 3;
 
-    let reasoning = `Hi ${userName} 👋  
-
-I analysed your study inputs carefully.
-
-You have ${totalDays} days until your exam.
-That gives you approximately ${totalStudyHours} total study hours.
-
-`;
+    let reasoning = `Hi ${userName} 👋\n\n`;
+    reasoning += `I analysed your study inputs carefully.\n\n`;
+    reasoning += `You have ${totalDays} days until your exam.\n`;
+    reasoning += `That gives you approximately ${totalStudyHours} total study hours.\n\n`;
 
     if (hardCount > 0) {
         reasoning += `Since you marked ${hardCount} subject(s) as hard, I prioritised them during allocation.\n`;
@@ -122,7 +122,8 @@ That gives you approximately ${totalStudyHours} total study hours.
         reasoning += `Since you have a moderate schedule, I distributed hours proportionally across days.\n`;
     }
 
-    reasoning += `Finally, I reserved the last day entirely for revision to reinforce your preparation.\n\nStrategy Used: Weighted hour-based adaptive allocation.`;
+    reasoning += `\nFinally, I reserved the last day entirely for revision to reinforce your preparation.\n\n`;
+    reasoning += `Strategy Used: Weighted hour-based adaptive allocation.`;
 
     res.json({
         totalDays,
@@ -132,6 +133,12 @@ That gives you approximately ${totalStudyHours} total study hours.
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+// ✅ Required for Vercel
+module.exports = app;
+
+// Local running support
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+    });
+}
