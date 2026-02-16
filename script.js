@@ -43,31 +43,25 @@ async function generatePlan() {
         return;
     }
 
-    try {
-        const response = await fetch("/api/generate-plan", {   // ✅ FIXED HERE
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                userName,
-                subjects,
-                examDate,
-                hoursPerDay: Number(hoursPerDay)
-            })
-        });
+    const response = await fetch("/generate-plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userName,
+            subjects,
+            examDate,
+            hoursPerDay: Number(hoursPerDay)
+        })
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (data.reasoning) {
-            formatReasoning(data.reasoning);
-        }
+    if (data.reasoning) {
+        formatReasoning(data.reasoning);
+    }
 
-        if (data.studyPlan) {
-            displayPlan(data.studyPlan);
-        }
-
-    } catch (error) {
-        alert("Server error. Please try again.");
-        console.error(error);
+    if (data.studyPlan) {
+        displayPlan(data.studyPlan);
     }
 }
 
@@ -75,16 +69,17 @@ async function generatePlan() {
 
 function formatReasoning(text) {
 
-    const lines = text.split("\n");
+    // Split into sentences
+    const sentences = text.split(". ");
 
     let formattedHTML = `
         <div class="agent-box">
             <strong>🤖 AI Study Analysis</strong><br><br>
     `;
 
-    lines.forEach(line => {
+    sentences.forEach(sentence => {
 
-        if (line.trim().toLowerCase().includes("strategy used")) {
+        if (sentence.toLowerCase().includes("strategy used")) {
             formattedHTML += `
                 <div style="
                     margin-top:12px;
@@ -93,13 +88,13 @@ function formatReasoning(text) {
                     border-radius:12px;
                     font-weight:500;
                 ">
-                    ${line}
+                    ${sentence.trim()}.
                 </div>
             `;
         } else {
             formattedHTML += `
-                <div style="margin-bottom:8px;">
-                    ${line}
+                <div style="margin-bottom:10px;">
+                    ${sentence.trim()}.
                 </div>
             `;
         }
