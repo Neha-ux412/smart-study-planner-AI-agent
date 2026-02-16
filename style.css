@@ -1,0 +1,266 @@
+/* ================= GLOBAL ================= */
+
+:root {
+    --brown-dark: #4e3425;
+    --brown-main: #6e4f3a;
+    --brown-soft: #8b6f58;
+    --cream-light: #f6efe8;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* ================= SPLASH SCREEN ================= */
+
+.splash {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: url("splashscreen.jpg") no-repeat center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    transition: opacity 1s ease, visibility 1s ease;
+}
+
+.splash.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-content {
+    text-align: center;
+    padding: 50px 70px;
+    border-radius: 22px;
+    background: rgba(60, 40, 30, 0.65);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    animation: fadeIn 1.2s ease forwards;
+}
+
+.app-title {
+    font-size: 38px;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+}
+
+/* Loader */
+.loader {
+    width: 45px;
+    height: 45px;
+    border: 4px solid rgba(255,255,255,0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    margin: auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ================= MAIN PAGE ================= */
+
+.overlay {
+    min-height: 100vh;
+    background: url("background.jpeg") no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 80px;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+}
+
+.overlay.show-main {
+    opacity: 1;
+}
+
+/* Main Card */
+
+.container {
+    width: 620px;
+    padding: 32px;
+    border-radius: 24px;
+    background: rgba(255, 248, 240, 0.55);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 20px 50px rgba(78, 52, 37, 0.25);
+    border: 1px solid rgba(120, 85, 65, 0.4);
+}
+
+/* Title */
+
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--brown-dark);
+    font-weight: 600;
+}
+
+/* Sections */
+
+.section {
+    margin-bottom: 22px;
+}
+
+.section label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--brown-main);
+}
+
+/* Inputs */
+
+input, select {
+    width: 100%;
+    padding: 9px;
+    border-radius: 12px;
+    border: 1px solid #c8b6a6;
+    background: rgba(255,255,255,0.95);
+    font-size: 14px;
+    color: var(--brown-dark);
+    transition: 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: var(--brown-main);
+    box-shadow: 0 0 6px rgba(110,79,58,0.3);
+    outline: none;
+}
+
+/* Subject row */
+
+.subject-row {
+    display: flex;
+    gap: 10px;
+}
+
+.subject-row input { flex: 2; }
+.subject-row select { flex: 1; }
+
+.subject-row button {
+    flex: 1;
+    background: var(--brown-soft);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.subject-row button:hover {
+    background: var(--brown-main);
+}
+
+/* Two column layout */
+
+.two-column {
+    display: flex;
+    gap: 28px;
+    margin-top: 10px;
+}
+
+.two-column div {
+    flex: 1;
+}
+
+/* Main button */
+
+.main-btn {
+    padding: 11px 26px;
+    background: var(--brown-main);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.main-btn:hover {
+    background: var(--brown-dark);
+}
+
+/* Subject tags */
+
+#subjectTags {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    padding: 6px 12px;
+    background: rgba(110, 79, 58, 0.15);
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--brown-dark);
+    border: 1px solid rgba(110, 79, 58, 0.3);
+}
+
+/* ================= AI RESPONSE CARD ================= */
+
+.agent-box {
+    margin-top: 30px;
+    padding: 22px;
+    border-radius: 18px;
+    background: rgba(110, 79, 58, 0.08);
+    border-left: 6px solid var(--brown-main);
+    box-shadow: 0 12px 30px rgba(78, 52, 37, 0.15);
+    color: var(--brown-dark);
+    line-height: 1.6;
+}
+
+/* ================= SCHEDULE GRID ================= */
+
+.schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+    margin-top: 25px;
+}
+
+.day-column {
+    background: rgba(139, 111, 88, 0.15);
+    border-radius: 16px;
+    padding: 15px;
+    box-shadow: 0 10px 25px rgba(78, 52, 37, 0.15);
+    transition: 0.3s ease;
+}
+
+.day-column:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(78, 52, 37, 0.25);
+}
+
+.column-header {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--brown-main);
+    border-bottom: 1px solid rgba(110, 79, 58, 0.3);
+    padding-bottom: 6px;
+}
+
+.task-box {
+    background: rgba(110, 79, 58, 0.2);
+    padding: 8px 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--brown-dark);
+    box-shadow: 0 6px 15px rgba(78, 52, 37, 0.12);
+}
