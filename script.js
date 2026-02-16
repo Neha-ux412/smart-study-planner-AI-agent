@@ -44,7 +44,7 @@ async function generatePlan() {
     }
 
     try {
-        const response = await fetch("/generate-plan", {   // ✅ FIXED HERE
+        const response = await fetch("/api/generate-plan", {   // ✅ FIXED HERE
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

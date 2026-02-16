@@ -1,21 +1,9 @@
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
+export default function handler(req, res) {
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+    if (req.method !== "POST") {
+        return res.status(405).json({ message: "Method Not Allowed" });
+    }
 
-app.use(cors());
-app.use(express.json());
-
-// ✅ Serve frontend static files
-app.use(express.static(path.join(__dirname)));
-
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
-});
-
-app.post("/generate-plan", (req, res) => {
     const { userName, subjects, examDate, hoursPerDay } = req.body;
 
     if (!userName || !subjects || !examDate || !hoursPerDay) {
@@ -60,7 +48,6 @@ app.post("/generate-plan", (req, res) => {
     const totalWeight = parsedSubjects.reduce((sum, s) => sum + s.weight, 0);
     const totalStudyHours = (totalDays - 1) * hoursPerDay;
 
-    // Allocate hours proportionally
     parsedSubjects.forEach(sub => {
         sub.allocatedHours = Math.round(
             (sub.weight / totalWeight) * totalStudyHours
@@ -75,6 +62,7 @@ app.post("/generate-plan", (req, res) => {
 
         parsedSubjects.forEach(sub => {
             if (sub.allocatedHours > 0 && remainingHoursToday > 0) {
+
                 const hoursToAssign = Math.min(
                     sub.allocatedHours,
                     remainingHoursToday
@@ -95,7 +83,6 @@ app.post("/generate-plan", (req, res) => {
         currentDay++;
     }
 
-    // Add revision day
     studyPlan.push({
         day: totalDays,
         subject: "Revision",
@@ -103,7 +90,6 @@ app.post("/generate-plan", (req, res) => {
         hours: hoursPerDay
     });
 
-    // 🤖 Agent Reasoning (Line Break Friendly)
     const hardCount = parsedSubjects.filter(s => s.difficulty === "hard").length;
     const limitedSchedule = totalDays <= 3;
 
@@ -125,20 +111,10 @@ app.post("/generate-plan", (req, res) => {
     reasoning += `\nFinally, I reserved the last day entirely for revision to reinforce your preparation.\n\n`;
     reasoning += `Strategy Used: Weighted hour-based adaptive allocation.`;
 
-    res.json({
+    res.status(200).json({
         totalDays,
         strategy: "Weighted hour-based intelligent allocation",
         reasoning,
         studyPlan
-    });
-});
-
-// ✅ Required for Vercel
-module.exports = app;
-
-// Local running support
-if (require.main === module) {
-    app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
     });
 }
